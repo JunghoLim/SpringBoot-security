@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jungbook.mapper.AccountMapper">
+    <select id="readAccount" resultType="com.jungbook.domain.Account" parameterType="string">
+        SELECT * FROM USERDATA WHERE ID = #{id}
+    </select>
+
+    <select id="readAutorities" resultType="string">
+        SELECT A.authority_name FROM AUTHORITY A, USERDATA U WHERE A.USERNAME = U.ID AND A.USERNAME = #{id}
+    </select>
+
+    <insert id="insertUser">
+        INSERT INTO USERDATA VALUES(#{account.id},#{account.password},#{account.isAccountNonExpired},#{account.isAccountNonLocked},#{account.isCredentialsNonExpired},#{account.isEnabled})
+    </insert>
+
+    <insert id="insertUserAutority">
+        INSERT INTO AUTHORITY VALUES(#{id},#{autority})
+    </insert>
+
+    <select id="readAllUsers" resultType="list">
+        SELECT* FROM USERDATA
+    </select>
+
+</mapper>

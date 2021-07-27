@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>JUNGBOOK</title>
+    <style>
+        html, body{
+            height: 80%;
+        }
+        body{
+            background-color: #F6F6F8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-md-4 mt-4 off-set-4 p-3 shadow p-3 mb-5 bg-body rounded">
+                <form id="loginForm" action="/user" method="post">
+                    <div class="mb-3">
+                        <label for="id" class="form-label">아이디</label>
+                        <input type="text" id="id" name="id" class="form-control" autocomplete="off"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="pw">비밀번호</label>
+                        <input type="password" id="pw" name="pw" class="form-control" autocomplete="off"/>
+                    </div>
+                    <button id="submitBtn" type="button" class="btn btn-primary">로그인</button>
+                </form>
+                <div class="mt-3">
+                    <a href="/user/new" class="btn btn-outline-info">회원가입</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function (){
+            $("#submitBtn").click(function (){
+                let id = $("#id").val();
+                let pw = $("#pw").val();
+                if(id == "" || pw == ""){
+                   alert('아이디 또는 비밀번호가 입력되지 않았습니다.');
+               }else{
+                    $("#loginForm").submit();
+               }
+            });
+            $("#pw").keyup(function (key){
+                if(key.keyCode == 13){
+                    $("#submitBtn").click();
+                }
+            })
+        })
+    </script>
+</body>
+</html>

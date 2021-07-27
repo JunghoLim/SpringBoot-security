@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>JUNGBOOK</title>
+    <style>
+        html, body{
+            height: 80%;
+        }
+        body{
+            background-color: #F6F6F8;
+        }
+    </style>
+</head>
+<body>
+<div class="container h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-md-4 mt-4 off-set-4 p-3 shadow p-3 mb-5 bg-body rounded">
+            <form id="signUpForm" action="/user/new" method="post">
+                <label for="id" class="form-label mb-0">아이디</label>
+                <div class="input-group mb-3">
+                    <input type="text" id="id" name="id" class="form-control" autocomplete="off" onchange="idCheck()"/>
+                    <button class="btn btn-sm btn-outline-secondary" type="button" id="idCheckBtn">중복 확인</button>
+                    <div id="id_feedback">
+                        <span></span>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="pw">비밀번호</label>
+                    <input type="password" id="pw" name="pw" class="form-control" autocomplete="off" onchange="pwCheck()"/>
+                    <div id="pw_feedback">
+                        <span></span>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="pwMatch">비밀번호 확인</label>
+                    <input type="password" id="pwMatch" class="form-control" autocomplete="off" onchange="pwMatching()"/>
+                    <div id="pwMatch_feedback">
+                        <span></span>
+                    </div>
+                </div>
+                <button id="submitBtn" type="button" class="btn btn-primary">등록</button>
+            </form>
+        </div>
+    </div>
+</div>
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    <script>
+        let duplicate = 0;
+        let beforeId;
+        let afterId;
+        let idCheck_num = 0;
+        let pwCheck_num = 0;
+        let pwMatching_num = 0;
+
+            function idCheck(){
+                let id = $("#id").val();
+                const idRegExp = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,20}$/;
+                if(!idRegExp.test(id)){
+                    $("#id_feedback span").text("아이디는 8~20자 사이의 영문-숫자 조합으로 구성해야 합니다.");
+                    $("#id_feedback").removeClass("valid-feedback");
+                    $("#id_feedback").addClass("invalid-feedback");
+                    $("#id").removeClass("is-valid");
+                    $("#id").addClass("is-invalid");
+                    idCheck_num = 0;
+                }else{
+                    $("#id_feedback span").text("아주 좋아요!");
+                    $("#id_feedback").removeClass("invalid-feedback");
+                    $("#id_feedback").addClass("valid-feedback");
+                    $("#id").removeClass("is-invalid");
+                    $("#id").addClass("is-valid");
+                    beforeId = id;
+                    idCheck_num = 1;
+                }
+            }
+
+            function pwCheck(){
+                let pw = $("#pw").val();
+                const pwRegExp = /^(?=.*[a-zA-Z])(?=.*[0-9]).{10,20}$/;
+                if(!pwRegExp.test(pw)){
+                    $("#pw_feedback span").text("비밀번호는 10~20자 사이의 영문-숫자 조합으로 구성해야 합니다.");
+                    $("#pw_feedback").removeClass("valid-feedback");
+                    $("#pw_feedback").addClass("invalid-feedback");
+                    $("#pw").removeClass("is-valid");
+                    $("#pw").addClass("is-invalid");
+                    pwCheck_num = 0;
+                }else{
+                    $("#pw_feedback span").text("아주 좋아요!");
+                    $("#pw_feedback").removeClass("invalid-feedback");
+                    $("#pw_feedback").addClass("valid-feedback");
+                    $("#pw").removeClass("is-invalid");
+                    $("#pw").addClass("is-valid");
+                    pwCheck_num = 1;
+                }
+            }
+
+            function pwMatching(){
+                let pw = $("#pw").val();
+                let pwCheck = $("#pwMatch").val();
+                if(pw != pwCheck){
+                    $("#pwMatch_feedback span").text("비밀번호가 일치하지 않습니다.");
+                    $("#pwMatch_feedback").removeClass("valid-feedback");
+                    $("#pwMatch_feedback").addClass("invalid-feedback");
+                    $("#pwMatch").removeClass("is-valid");
+                    $("#pwMatch").addClass("is-invalid");
+                    pwMatching_num = 0;
+                }else{
+                    $("#pwMatch_feedback span").text("아주 좋아요!");
+                    $("#pwMatch_feedback").removeClass("invalid-feedback");
+                    $("#pwMatch_feedback").addClass("valid-feedback");
+                    $("#pwMatch").removeClass("is-invalid");
+                    $("#pwMatch").addClass("is-valid");
+                    pwMatching_num = 1;
+                }
+            }
+
+            $("#idCheckBtn").click(function (){
+                let id = $("#id").val();
+                if(idCheck_num == 1){
+                    $.ajax({
+                        url: "/user/duplicate",
+                        type: "POST",
+                        data: {id: id},
+                        success: [function(result){
+                            if(result == "1"){
+                                alert('중복된 아이디가 존재합니다.\n아이디를 변경해 주세요!');
+                                duplicate = 0;
+                            }else if(result == "0"){
+                                alert('사용 가능한 아이디입니다!.');
+                                beforeId = id;
+                                duplicate = 1;
+                            }else{
+                                console.log(result);
+                                alert('에러가 발생 했습니다');
+                            }
+                        }],
+                        error: [function (){
+                            alert('서버 연결 실패');
+                        }]
+                    })
+                }else{
+                    alert('아이디 형식을 맞춰주세요!');
+                }
+            });
+
+            $("#submitBtn").click(function (){
+                afterId = $("#id").val();
+
+                if(beforeId == afterId && idCheck_num == 1 && pwCheck_num == 1 && pwMatching_num == 1 && duplicate == 1){
+                    $("#signUpForm").submit();
+                }else if(beforeId != afterId){
+                    alert('중복체크가 필요합니다.');
+                }else if(idCheck_num != 1){
+                    alert('아이디를 확인해 주세요.');
+                }else if(pwCheck_num != 1){
+                    alert('비밀번호를 확인해 주세요.');
+                }else if(pwMatching_num != 1){
+                    alert('비밀번호를 일치시켜 주세요.');
+                }else if(duplicate != 1){
+                    alert('중복체크를 진행해 주세요.');
+                }
+            });
+    </script>
+</body>
+</html>
